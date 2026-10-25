@@ -119,13 +119,7 @@ bool inserirDireita(mesa &m, peca novaPeca)
     {
         int extremidade = m.fim->valor.lado2;
 
-        // Se o lado esquerdo encaixar, mantém a orientação.
-        if (novaPeca.lado1 == extremidade)
-        {
-            // Mantém a peça como está.
-        }
-        // Se o lado direito encaixar, inverte a peça.
-        else if (novaPeca.lado2 == extremidade)
+        if (novaPeca.lado2 == extremidade)
         {
             int aux = novaPeca.lado1;
             novaPeca.lado1 = novaPeca.lado2;
@@ -164,11 +158,7 @@ bool inserirEsquerda(mesa &m, peca novaPeca)
     {
         int extremidade = m.inicio->valor.lado1;
 
-        if (novaPeca.lado2 == extremidade)
-        {
-            // A peça já está na orientação correta.
-        }
-        else if (novaPeca.lado1 == extremidade)
+        if (novaPeca.lado1 == extremidade)
         {
             int aux = novaPeca.lado1;
             novaPeca.lado1 = novaPeca.lado2;
