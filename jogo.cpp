@@ -4,21 +4,21 @@
 
 using namespace std;
 
-//representa uma peca de domino, com os valores dos dois lados
+//representa uma peca de dominó, com os valores dos dois lados
 struct peca
 {
     int lado1;
     int lado2;
 };
 
-//guarda as pecas que ainda podem ser compradas durante a partida
+//guarda as peças que ainda podem ser compradas durante a partida
 struct monte
 {
     peca *pecas;
     int qtd;
 };
 
-//cada no armazena uma peca e aponta para o no anterior e o proximo
+//cada no armazena uma peça e aponta para o no anterior e o próximo
 struct no
 {
     peca valor;
@@ -26,7 +26,7 @@ struct no
     no *proximo;
 };
 
-//a mesa e uma lista duplamente encadeada: inicio e fim permitem inserir nas duas pontas
+//a mesa é uma lista duplamente encadeada: início e fim permitem inserir nas duas pontas
 struct mesa
 {
     no *inicio;
@@ -34,7 +34,7 @@ struct mesa
     int quantidade;
 };
 
-//cria as 28 combinacoes unicas do dominó tradicional
+//cria as 28 combinações únicas do dominó tradicional
 peca *gerarPecas()
 {
     peca *pecas = new peca[28];
@@ -54,7 +54,7 @@ peca *gerarPecas()
     return pecas;
 }
 
-//embaralha as pecas trocando cada posicao por uma posicao aleatoria anterior ou igual
+//embaralha as peças trocando cada posição por uma posição aleatória anterior ou igual
 void embaralharPecas(peca *pecas, int tam)
 {
     for (int i = tam - 1; i > 0; i--)
@@ -67,7 +67,7 @@ void embaralharPecas(peca *pecas, int tam)
     }
 }
 
-//entrega sete pecas para cada jogador, usando o vetor de peças já embaralhadas
+//entrega sete peças para cada jogador, usando o vetor de peças já embaralhadas
 void distribuirPecas(peca *pecas, int qtdJogadores, peca **jogadores)
 {
     int indice = 0;
@@ -82,7 +82,7 @@ void distribuirPecas(peca *pecas, int qtdJogadores, peca **jogadores)
     }
 }
 
-//retira a última peca disponível do monte e reduz a quantidade restante
+//retira a última peça disponível do monte e reduz a quantidade restante
 peca comprarPeca(monte &m)
 {
     if (m.qtd == 0)
@@ -165,7 +165,7 @@ bool inserirDireita(mesa &m, peca novaPeca)
 }
 
 //tenta encaixar uma peca na extremidade esquerda da mesa
-//atualiza os ponteiros da lista e inverte a peca quando necessário
+//atualiza os ponteiros da lista e inverte a peça quando necessário
 bool inserirEsquerda(mesa &m, peca novaPeca)
 {
     if (m.inicio != nullptr)
