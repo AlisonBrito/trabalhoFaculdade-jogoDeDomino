@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//representa uma peca de dominó, com os valores dos dois lados
+//representa uma peça de dominó, com os valores dos dois lados
 struct peca
 {
     int lado1;
