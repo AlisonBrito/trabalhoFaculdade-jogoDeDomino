@@ -4,18 +4,21 @@
 
 using namespace std;
 
+//representa uma peca de domino, com os valores dos dois lados
 struct peca
 {
     int lado1;
     int lado2;
 };
 
+//guarda as pecas que ainda podem ser compradas durante a partida
 struct monte
 {
     peca *pecas;
     int qtd;
 };
 
+//cada no armazena uma peca e aponta para o no anterior e o proximo
 struct no
 {
     peca valor;
@@ -23,6 +26,7 @@ struct no
     no *proximo;
 };
 
+//a mesa e uma lista duplamente encadeada: inicio e fim permitem inserir nas duas pontas
 struct mesa
 {
     no *inicio;
@@ -30,6 +34,7 @@ struct mesa
     int quantidade;
 };
 
+//cria as 28 combinacoes unicas do dominó tradicional
 peca *gerarPecas()
 {
     peca *pecas = new peca[28];
@@ -49,6 +54,7 @@ peca *gerarPecas()
     return pecas;
 }
 
+//embaralha as pecas trocando cada posicao por uma posicao aleatoria anterior ou igual
 void embaralharPecas(peca *pecas, int tam)
 {
     for (int i = tam - 1; i > 0; i--)
@@ -61,6 +67,7 @@ void embaralharPecas(peca *pecas, int tam)
     }
 }
 
+//entrega sete pecas para cada jogador, usando o vetor de peças já embaralhadas
 void distribuirPecas(peca *pecas, int qtdJogadores, peca **jogadores)
 {
     int indice = 0;
@@ -75,6 +82,7 @@ void distribuirPecas(peca *pecas, int qtdJogadores, peca **jogadores)
     }
 }
 
+//retira a última peca disponível do monte e reduz a quantidade restante
 peca comprarPeca(monte &m)
 {
     if (m.qtd == 0)
@@ -90,6 +98,8 @@ peca comprarPeca(monte &m)
     return comprada;
 }
 
+//remove uma peca da mão deslocando as outras uma posição pra esquerda
+//a quantidade é passada por referência para atualizar o total de peças do jogador
 void removerPeca(peca *mao, int &quantidade, int indiceEscolhido)
 {
     if (indiceEscolhido < 0 || indiceEscolhido >= quantidade)
@@ -106,6 +116,7 @@ void removerPeca(peca *mao, int &quantidade, int indiceEscolhido)
     quantidade--;
 }
 
+//inicializa a lista vazia: nao há primeiro nem ultimo nó
 void inicializarMesa(mesa &m)
 {
     m.inicio = nullptr;
@@ -113,6 +124,7 @@ void inicializarMesa(mesa &m)
     m.quantidade = 0;
 }
 
+//tenta encaixar uma peca na extremidade direita da mesa e se necessário inverte os lados (retorna false se não houver encaixe)
 bool inserirDireita(mesa &m, peca novaPeca)
 {
     if (m.inicio != nullptr)
@@ -152,6 +164,8 @@ bool inserirDireita(mesa &m, peca novaPeca)
     return true;
 }
 
+//tenta encaixar uma peca na extremidade esquerda da mesa
+//atualiza os ponteiros da lista e inverte a peca quando necessário
 bool inserirEsquerda(mesa &m, peca novaPeca)
 {
     if (m.inicio != nullptr)
@@ -191,6 +205,7 @@ bool inserirEsquerda(mesa &m, peca novaPeca)
     return true;
 }
 
+//percorre a lista e libera cada nó alocado dinamicamente
 void liberarMesa(mesa &m)
 {
     no *atual = m.inicio;
@@ -207,11 +222,12 @@ void liberarMesa(mesa &m)
     m.quantidade = 0;
 }
 
+//percorre a lista do início ao fim e mostra as peças que estão na mesa
 void exibirMesa(mesa &m)
 {
     no *atual = m.inicio;
 
-    cout << "\nMesa de domino:\n";
+    cout << "\nMesa:\n";
 
     while (atual != nullptr)
     {
@@ -239,6 +255,7 @@ void exibirMao(peca *mao, int quantidade)
     cout << "\n";
 }
 
+//mostra a mão numerando as peças para que o jogador escolha pelo índice dela
 void exibirMaoJogador(peca *mao, int quantidade)
 {
     for (int i = 0; i < quantidade; i++)
@@ -247,6 +264,8 @@ void exibirMaoJogador(peca *mao, int quantidade)
     }
 }
 
+//valida a escolha, tenta inserir a peca na extremidade escolhida e por fim remove da mão
+//retorna true se a jogada for realizada e false se houver algum erro ou falta de encaixe
 bool jogarPeca(mesa &tabuleiro, peca *mao, int &quantidade, int indiceEscolhido, int lado)
 {
     if (indiceEscolhido < 0 || indiceEscolhido >= quantidade)
@@ -283,6 +302,7 @@ bool jogarPeca(mesa &tabuleiro, peca *mao, int &quantidade, int indiceEscolhido,
     return true;
 }
 
+//verifica se alguma peça da mão combina com uma das duas extremidades da mesa
 bool temJogada(mesa &tabuleiro, peca *mao, int quantidade)
 {
     if (tabuleiro.inicio == nullptr)
@@ -304,6 +324,7 @@ bool temJogada(mesa &tabuleiro, peca *mao, int quantidade)
     return false;
 }
 
+//soma os dois lados de todas as peças restantes na mão do jogador
 int calcularPontos(peca *mao, int quantidade)
 {
     int pontos = 0;
@@ -318,7 +339,6 @@ int calcularPontos(peca *mao, int quantidade)
 
 int main()
 {
-
     srand(time(NULL));
 
     int qtdJogadores;
@@ -335,6 +355,7 @@ int main()
     peca *pecas = gerarPecas();
     embaralharPecas(pecas, 28);
 
+    //aloca dinamicamente um vetor de mãos (uma para cada jogador)
     peca **jogadores = new peca *[qtdJogadores];
     int *qtdPecasJogador = new int[qtdJogadores];
 
@@ -344,6 +365,7 @@ int main()
         qtdPecasJogador[i] = 7;
     }
 
+    // distribui sete peças para cada jogador e as restantes vão pro monte
     distribuirPecas(pecas, qtdJogadores, jogadores);
 
     int indice = qtdJogadores * 7;
@@ -362,6 +384,7 @@ int main()
         }
     }
 
+    //prepara a mesa e as variáveis que controlam os turnos e o fim da partida
     mesa tabuleiro;
     inicializarMesa(tabuleiro);
 
@@ -371,6 +394,7 @@ int main()
 
     cout << "\n=== INICIO DO JOGO ===\n";
 
+    //o jogo continua enquanto não houver vencedor ou bloqueio
     while (jogoAtivo)
     {
         cout << "\n--------------------------------\n";
@@ -381,6 +405,7 @@ int main()
         cout << "\nSua mao:\n";
         exibirMaoJogador(jogadores[jogadorAtual], qtdPecasJogador[jogadorAtual]);
 
+        //se nao houver jogada, o jogador compra peças até conseguir jogar ou o monte acabar
         while (!temJogada(tabuleiro, jogadores[jogadorAtual], qtdPecasJogador[jogadorAtual]) && m.qtd > 0)
         {
             cout << "Voce nao tem jogada possivel. Comprando peca...\n";
@@ -397,6 +422,7 @@ int main()
             exibirMaoJogador(jogadores[jogadorAtual], qtdPecasJogador[jogadorAtual]);
         }
 
+        //sem jogada e sem peças no monte, o jogador passa a vez
         if (!temJogada(tabuleiro, jogadores[jogadorAtual], qtdPecasJogador[jogadorAtual]))
         {
             cout << "Jogador " << jogadorAtual + 1 << " passou a vez.\n";
@@ -432,6 +458,7 @@ int main()
             }
         }
 
+        //se todos os jogadores passarem em sequência, a partida esta bloqueada
         if (jogoAtivo && passagensConsecutivas >= qtdJogadores)
         {
             cout << "\nA partida bloqueou!\n";
@@ -481,6 +508,7 @@ int main()
             jogadorAtual = (jogadorAtual + 1) % qtdJogadores;
         }
     }
+    //libera toda a memória alocada dinamicamente antes de encerrar
     liberarMesa(tabuleiro);
     delete[] m.pecas;
 
